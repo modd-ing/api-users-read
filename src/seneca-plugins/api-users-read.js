@@ -20,7 +20,7 @@ module.exports = function () {
 	});
 
 	// Get user
-	this.add( 'role:api,path:users,type:read,cmd:get', function( msg, done ) {
+	this.add( 'role:api,path:users,cmd:get', function( msg, done ) {
 
 		let userId = ( msg.params.id || msg.query.id ),
 			username = msg.query.username,
