@@ -2,7 +2,7 @@
 
 const Promise = require( 'bluebird' );
 const r = require( 'rethinkdbdash' )({
-	host: 'modding-rethinkdb-proxy',
+	host: 'rethinkdb-proxy',
 	db: 'modding'
 });
 
