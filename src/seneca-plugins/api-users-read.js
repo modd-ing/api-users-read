@@ -8,7 +8,7 @@ module.exports = function () {
 	// Promisify the seneca .act() method
 	let act = Promise.promisify( this.act, { context: this });
 
-	this.add( 'init:users.api.read', function( msg, done ) {
+	this.add( 'init:api-users-read', function( msg, done ) {
 
 		db.init()
 			.then( function() {
