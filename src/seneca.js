@@ -21,12 +21,12 @@ seneca.ready( function( err ) {
 		.listen({
 			pin: 'role:api,path:users,type:read',
 			type: 'amqp',
-			url: 'amqp://rabbitmq-master'
+			url: 'amqp://rabbitmq-api'
 		})
 		.client({
 			pin: 'role:api,path:users,type:write',
 			type: 'amqp',
-			url: 'amqp://rabbitmq-master'
+			url: 'amqp://rabbitmq-api'
 		});
 
 });
