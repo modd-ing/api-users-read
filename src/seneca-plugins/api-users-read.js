@@ -5,137 +5,137 @@ const db = require( '../db' );
 
 module.exports = function () {
 
-	// Promisify the seneca .act() method
-	let act = Promise.promisify( this.act, { context: this });
+  // Promisify the seneca .act() method
+  let act = Promise.promisify( this.act, { context: this });
 
-	this.add( 'init:api-users-read', function( msg, done ) {
+  this.add( 'init:api-users-read', function( msg, done ) {
 
-		db.init()
-			.then( function() {
+    db.init()
+      .then( function() {
 
-				done();
+        done();
 
-			});
+      });
 
-	});
+  });
 
-	// Get user
-	this.add( 'role:api,path:users,cmd:get', function( msg, done ) {
+  // Get user
+  this.add( 'role:api,path:users,cmd:get', function( msg, done ) {
 
-		let userId = ( msg.params.id || msg.query.id ),
-			username = msg.query.username,
-			isSearch = !! msg.query.search,
-			queryParams = {
-				filters: {}
-			},
-			queryOptions = {};
+    let userId = ( msg.params.id || msg.query.id ),
+      username = msg.query.username,
+      isSearch = !! msg.query.search,
+      queryParams = {
+        filters: {}
+      },
+      queryOptions = {};
 
-		if ( userId ) {
+    if ( userId ) {
 
-			if ( -1 !== userId.indexOf( ',' ) ) {
+      if ( -1 !== userId.indexOf( ',' ) ) {
 
-				userId = userId.split( ',' );
+        userId = userId.split( ',' );
 
-			}
+      }
 
-			queryParams = {
-				id: userId
-			};
+      queryParams = {
+        id: userId
+      };
 
-		} else if ( username ) {
+    } else if ( username ) {
 
-			if ( isSearch ) {
+      if ( isSearch ) {
 
-				queryParams.filters.username = username;
+        queryParams.filters.username = username;
 
-			} else {
+      } else {
 
-				queryParams.username = username;
+        queryParams.username = username;
 
-			}
+      }
 
-		}
+    }
 
-		// results limit
-		if ( msg.query.limit && ! isNaN( msg.query.limit ) ) {
+    // results limit
+    if ( msg.query.limit && ! isNaN( msg.query.limit ) ) {
 
-			queryOptions.limit = parseInt( msg.query.limit, 10 );
+      queryOptions.limit = parseInt( msg.query.limit, 10 );
 
-		}
+    }
 
-		// results page
-		if ( msg.query.page && ! isNaN( msg.query.page ) ) {
+    // results page
+    if ( msg.query.page && ! isNaN( msg.query.page ) ) {
 
-			queryOptions.page = parseInt( msg.query.page, 10 );
+      queryOptions.page = parseInt( msg.query.page, 10 );
 
-		}
+    }
 
-		// ordering
-		var allowedOrderBy = [
-			'username',
-			'date'
-		];
+    // ordering
+    var allowedOrderBy = [
+      'username',
+      'date'
+    ];
 
-		if ( 'desc' === msg.query.order ) {
+    if ( 'desc' === msg.query.order ) {
 
-			queryOptions.order = 'desc';
+      queryOptions.order = 'desc';
 
-		}
+    }
 
-		if ( 'desc' === msg.query.orderEnd ) {
+    if ( 'desc' === msg.query.orderEnd ) {
 
-			queryOptions.orderEnd = 'desc';
+      queryOptions.orderEnd = 'desc';
 
-		}
+    }
 
-		if ( msg.query.orderBy && -1 !== allowedOrderBy.indexOf( msg.query.orderBy ) ) {
+    if ( msg.query.orderBy && -1 !== allowedOrderBy.indexOf( msg.query.orderBy ) ) {
 
-			queryOptions.orderByStart = msg.query.orderBy;
+      queryOptions.orderByStart = msg.query.orderBy;
 
-			if ( 'date' === queryOptions.orderByStart ) {
+      if ( 'date' === queryOptions.orderByStart ) {
 
-				queryOptions.orderByStart = 'timestamp';
+        queryOptions.orderByStart = 'timestamp';
 
-			}
+      }
 
-		}
+    }
 
-		if ( msg.query.orderByEnd && -1 !== allowedOrderBy.indexOf( msg.query.orderByEnd ) ) {
+    if ( msg.query.orderByEnd && -1 !== allowedOrderBy.indexOf( msg.query.orderByEnd ) ) {
 
-			queryOptions.orderByEnd = msg.query.orderByEnd;
+      queryOptions.orderByEnd = msg.query.orderByEnd;
 
-			if ( 'date' === queryOptions.orderByEnd ) {
+      if ( 'date' === queryOptions.orderByEnd ) {
 
-				queryOptions.orderByEnd = 'timestamp';
+        queryOptions.orderByEnd = 'timestamp';
 
-			}
+      }
 
-		}
+    }
 
-		act({
-				role: 'api',
-				path: 'users',
-				cmd: 'getUsers',
-				args: queryParams,
-				options: queryOptions
-			})
-			.then( ( result ) => {
+    act({
+        role: 'api',
+        path: 'users',
+        cmd: 'getUsers',
+        args: queryParams,
+        options: queryOptions
+      })
+      .then( ( result ) => {
 
-				done( null, {
-					data: result.data
-				});
+        done( null, {
+          data: result.data
+        });
 
-			})
-			.catch( ( err ) => {
+      })
+      .catch( ( err ) => {
 
-				done( err, null );
+        done( err, null );
 
-			});
+      });
 
-	});
+  });
 
-	return {
-		name: 'api-users-read'
-	};
+  return {
+    name: 'api-users-read'
+  };
 
 };
