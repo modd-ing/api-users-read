@@ -12,6 +12,7 @@ module.exports = function () {
     let args = msg.args,
       options = msg.options,
       defaultOptions = {
+        hidePrivate: true,
         limit: 10,
         order: 'asc',
         orderEnd: 'asc',
@@ -184,6 +185,13 @@ module.exports = function () {
       options.orderByEnd = 'asc' === options.orderEnd ? r.asc( options.orderByEnd ) : r.desc( options.orderByEnd );
 
       request = request.orderBy( options.orderByEnd );
+
+    }
+
+    // Check if we need to hide private details
+    if ( options.hidePrivate ) {
+
+      request = request.without( 'email', 'password' );
 
     }
 
