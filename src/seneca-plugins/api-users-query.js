@@ -191,7 +191,7 @@ module.exports = function () {
     // Check if we need to hide private details
     if ( options.hidePrivate ) {
 
-      request = request.without( 'email', 'password' );
+      request = request.without( 'email', 'password' ).default( null );
 
     }
 
