@@ -9,8 +9,7 @@ module.exports = function () {
 
   this.add( 'role:api,path:users,cmd:getUsers', function( msg, done ) {
 
-    let args = msg.args,
-      options = msg.options,
+    const args = msg.args,
       defaultOptions = {
         hidePrivate: true,
         limit: 10,
@@ -21,7 +20,7 @@ module.exports = function () {
         page: 1
       };
 
-    options = _.defaults( options, defaultOptions );
+    const options = _.defaults( msg.options, defaultOptions );
 
     // Limit cant be lower than 1 or higher than 100
     options.limit = Math.min( Math.max( 1, parseInt( options.limit, 10 ) ), 100 );
@@ -144,17 +143,17 @@ module.exports = function () {
 
     }
 
-    // initial ordering
+    // Initial ordering
     if ( options.orderByStart ) {
 
       if ( dataWasFiltered ) {
 
-        // don't use indexes for ordering as we are not working with a table or a table slice
+        // Don't use indexes for ordering as we are not working with a table or a table slice
         options.orderByStart = 'asc' === options.order ? r.asc( options.orderByStart ) : r.desc( options.orderByStart );
 
       } else {
 
-        // data was not filtered, we can safely use indexed ordering
+        // Data was not filtered, we can safely use indexed ordering
         options.orderByStart = {
           index: 'asc' === options.order ? r.asc( options.orderByStart ) : r.desc( options.orderByStart )
         };
@@ -165,21 +164,21 @@ module.exports = function () {
 
     }
 
-    // page
+    // Page
     if ( ( ! args.id || Array.isArray( args.id ) ) && options.page > 1 ) {
 
       request = request.skip( options.limit * ( options.page - 1 ) );
 
     }
 
-    // limit
+    // Limit
     if ( ( ! args.id || Array.isArray( args.id ) ) && options.limit ) {
 
       request = request.limit( options.limit );
 
     }
 
-    // final results ordering
+    // Final results ordering
     if ( options.orderByStart && options.orderByEnd ) {
 
       options.orderByEnd = 'asc' === options.orderEnd ? r.asc( options.orderByEnd ) : r.desc( options.orderByEnd );

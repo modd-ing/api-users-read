@@ -22,8 +22,9 @@ module.exports = function () {
   // Get user
   this.add( 'role:api,path:users,cmd:get', function( msg, done ) {
 
-    let userId = ( msg.params.id || msg.query.id ),
-      username = msg.query.username,
+    let userId = ( msg.params.id || msg.query.id );
+
+    const username = msg.query.username,
       isSearch = !! msg.query.search,
       queryParams = {
         filters: {}
@@ -38,9 +39,7 @@ module.exports = function () {
 
       }
 
-      queryParams = {
-        id: userId
-      };
+      queryParams.id = userId;
 
     } else if ( username ) {
 
